@@ -1,3 +1,5 @@
+if rawget(_G, "__hyprscroll2d_omarchy_integrated") then return true end
+
 local function safe_field(value, field)
     if value == nil then return nil end
     local ok, result = pcall(function() return value[field] end)
@@ -73,3 +75,6 @@ end)
 replace("SUPER + SHIFT + code:21", "Grow window height", "resize height grow", function()
     return hl.dsp.window.resize({ x = 0, y = 100, relative = true })
 end)
+
+_G.__hyprscroll2d_omarchy_integrated = true
+return true

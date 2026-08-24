@@ -23,21 +23,49 @@ visible, so you never lose the shape of your workspace.
 
 ## Status
 
-`v0.1.0` is an experimental preview for Hyprland `0.56.x`. It has been
+`v0.2.0` is an experimental preview for Hyprland `0.56.x`. It has been
 live-tested on Hyprland `0.56.2` and is intentionally enabled on only one
 workspace during evaluation.
 
 The layout uses Hyprland's Lua custom-layout API, so it does not require a
-compiled Hyprland plugin. The included binding integration currently targets
-Omarchy. Other Lua-configured Hyprland installations can load the layout, but
-must provide their own bindings.
+compiled Hyprland plugin. Native Omarchy Shell packaging loads the layout and
+keeps it active across Hyprland config reloads. Other Lua-configured Hyprland
+installations can load the layout, but must provide their own bindings.
 
 ## Install on Omarchy
 
+### Recommended: Omarchy plugin command
+
 Requirements:
 
-- Omarchy with Hyprland `0.56.x`
-- Git
+- Current Omarchy Quattro with Hyprland `0.56.x`
+
+Install and enable directly from GitHub:
+
+```bash
+omarchy plugin add https://github.com/kirollosatef/hyprscroll2d --enable
+```
+
+The plugin loads Hyprscroll2D at runtime without editing your Hyprland config.
+It enables the layout only on workspace 9. Press `Super+9`, open a few windows,
+and try the controls below.
+
+Update it later with:
+
+```bash
+omarchy plugin update io.github.kirollosatef.hyprscroll2d
+```
+
+The repository contains a validated Omarchy `manifest.json` and can be
+installed through the official `omarchy plugin` command today. A listing on
+the community [Omarchy Plugin Marketplace](https://omarchyplugins.com/) is a
+separate review process and does not make a plugin part of Omarchy's bundled
+first-party plugins.
+
+### Alternative: config installer
+
+If your Omarchy version does not yet provide `omarchy plugin`, clone the
+project and run the config installer:
 
 Clone the project and run the installer:
 
@@ -47,7 +75,7 @@ git clone https://github.com/kirollosatef/hyprscroll2d.git \
 ~/.local/share/hyprscroll2d/install.sh
 ```
 
-The installer:
+This alternative installer:
 
 - creates a timestamped backup of `~/.config/hypr/hyprland.lua`;
 - enables Hyprscroll2D only on workspace 9;
@@ -80,8 +108,7 @@ hyprctl reload
 hyprctl configerrors
 ```
 
-If `hyprctl configerrors` prints nothing, press `Super+9`, open a few windows,
-and try the controls below.
+If `hyprctl configerrors` prints nothing, the manual setup is ready.
 
 ## Controls
 
@@ -109,7 +136,7 @@ Edit [`layout/config.lua`](layout/config.lua) to change:
 
 Reload Hyprland after changing the values.
 
-## Update
+## Update a config installation
 
 ```bash
 git -C ~/.local/share/hyprscroll2d pull --ff-only
@@ -119,7 +146,17 @@ hyprctl configerrors
 
 ## Uninstall
 
-Run the uninstaller before deleting the repository:
+If installed using `omarchy plugin add`, run:
+
+```bash
+omarchy plugin remove io.github.kirollosatef.hyprscroll2d --yes
+hyprctl reload
+```
+
+The reload restores Omarchy's normal bindings and removes the runtime layout.
+
+If installed using the alternative config installer, run its uninstaller
+before deleting the repository:
 
 ```bash
 ~/.local/share/hyprscroll2d/uninstall.sh
@@ -137,7 +174,7 @@ rm -rf ~/.local/share/hyprscroll2d
 - State is reset when Hyprland reloads.
 - Fullscreen, groups, multi-monitor moves, and special workspaces need more
   testing.
-- The bundled conditional keybinding integration currently supports Omarchy.
+- The bundled conditional keybinding integration supports Omarchy.
 - Compatibility outside Hyprland `0.56.x` is not yet guaranteed.
 
 Please report issues with your Hyprland version, monitor geometry, relevant

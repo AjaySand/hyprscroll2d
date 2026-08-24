@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0 - 2026-08-24
+
+- Add native installation through `omarchy plugin add`.
+- Reload the layout automatically after a Hyprland configuration reload.
+- Add an Omarchy marketplace-compatible service manifest.
+
 ## v0.1.0 - 2026-08-24
 
 First experimental preview.

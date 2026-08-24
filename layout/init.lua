@@ -1,3 +1,5 @@
+if rawget(_G, "__hyprscroll2d_layout_registered") then return true end
+
 local function current_dir()
     local source = debug and debug.getinfo(1, "S").source
     if type(source) ~= "string" or source:sub(1, 1) ~= "@" then
@@ -145,3 +147,6 @@ hl.layout.register("hyprscroll2d", {
     recalculate = recalculate,
     layout_msg = layout_msg,
 })
+
+_G.__hyprscroll2d_layout_registered = true
+return true
