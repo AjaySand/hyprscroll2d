@@ -9,4 +9,5 @@ First experimental preview.
 - Add independent width and height presets.
 - Keep neighboring rows and columns visible with configurable edge peeks.
 - Add conditional Omarchy integration for an isolated test workspace.
+- Add safe Omarchy install and uninstall scripts with config backups.
 - Add core, Hyprland adapter, and Omarchy integration tests.

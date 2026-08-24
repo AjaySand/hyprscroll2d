@@ -39,15 +39,30 @@ Requirements:
 - Omarchy with Hyprland `0.56.x`
 - Git
 
-Clone the project into your local data directory:
+Clone the project and run the installer:
 
 ```bash
 git clone https://github.com/kirollosatef/hyprscroll2d.git \
   ~/.local/share/hyprscroll2d
+~/.local/share/hyprscroll2d/install.sh
 ```
 
-Add the following near the end of `~/.config/hypr/hyprland.lua`, after the
-Omarchy defaults and your normal `require("hypr.*")` lines:
+The installer:
+
+- creates a timestamped backup of `~/.config/hypr/hyprland.lua`;
+- enables Hyprscroll2D only on workspace 9;
+- reloads Hyprland and checks for configuration errors;
+- restores the backup automatically if the new block causes an error.
+
+To use a different experimental workspace, pass its number:
+
+```bash
+~/.local/share/hyprscroll2d/install.sh 8
+```
+
+For a manual installation, add the following near the end of
+`~/.config/hypr/hyprland.lua`, after the Omarchy defaults and your normal
+`require("hypr.*")` lines:
 
 ```lua
 local hyprscroll2d = os.getenv("HOME") .. "/.local/share/hyprscroll2d"
@@ -58,7 +73,7 @@ dofile(hyprscroll2d .. "/integration/omarchy.lua")
 hl.workspace_rule({ workspace = "9", layout = "lua:hyprscroll2d" })
 ```
 
-Reload and validate the configuration:
+Then reload and validate the configuration:
 
 ```bash
 hyprctl reload
@@ -104,14 +119,14 @@ hyprctl configerrors
 
 ## Uninstall
 
-Remove the Hyprscroll2D block from `~/.config/hypr/hyprland.lua`, then reload:
+Run the uninstaller before deleting the repository:
 
 ```bash
-hyprctl reload
-hyprctl configerrors
+~/.local/share/hyprscroll2d/uninstall.sh
 ```
 
-Once the config is clean, remove the cloned repository:
+It removes only the marked Hyprscroll2D block and creates another timestamped
+config backup. Once it finishes, remove the cloned repository:
 
 ```bash
 rm -rf ~/.local/share/hyprscroll2d
