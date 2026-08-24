@@ -13,9 +13,22 @@ Research was performed against Hyprland 0.56.2 on 2026-08-24.
 - `ForgeDuSavoir/fit-scroller-layout` is the strongest Lua reference. Its
   spatial mode supports directional geometry but deliberately allows overflow
   on only one configured axis.
+- `aaronsb/hypr-canvas` is a compiled C++ plugin providing a continuous,
+  zoomable and pannable canvas. It transforms compositor coordinates rather
+  than arranging windows into a tiled grid.
+- `HarryC913/hyprplane` is a compiled C++ canvas-mode plugin with freeform
+  floating windows, multi-monitor panning, an overview and a minimap.
+- `sarodscommits/hyprland-infinitie-desktop-v2` and `rippelz/infiniscroll`
+  provide floating-window canvas workflows using external Python, shell and
+  Rust processes.
+- `lonelyobserver0/infinite_desk` is a compiled continuous-canvas plugin that
+  explicitly avoids grids, cells and snapping.
 
-No maintained public project found during the search implemented an infinite
-two-axis window canvas for Hyprland.
+Several maintained projects therefore explore the broader infinite-canvas
+idea. No project found during the search matched Hyprscroll2D's specific
+combination: a pure-Lua `hl.layout.register` layout, discrete tiled cells,
+independent horizontal and vertical size presets, two-axis edge peeks and
+native Omarchy plugin packaging.
 
 ## Technical choice
 
@@ -37,3 +50,8 @@ match the running compositor ABI and can reduce compositor stability.
 - https://github.com/kuroiko0429/hyprscroller-ng
 - https://github.com/outfoxxed/hy3
 - https://github.com/shawnmurali/hyprortholayout
+- https://github.com/aaronsb/hypr-canvas
+- https://github.com/HarryC913/hyprplane
+- https://github.com/sarodscommits/hyprland-infinitie-desktop-v2
+- https://github.com/rippelz/infiniscroll
+- https://github.com/lonelyobserver0/infinite_desk

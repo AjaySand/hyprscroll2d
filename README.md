@@ -191,7 +191,7 @@ make check
 The geometry and navigation engine is isolated from Hyprland APIs so it can be
 tested with plain Lua. See [`docs/DESIGN.md`](docs/DESIGN.md) for the behavioral
 model and roadmap, and [`docs/RESEARCH.md`](docs/RESEARCH.md) for related
-projects and technical background.
+projects, important differences and technical background.
 
 ## Contributing
 
