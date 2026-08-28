@@ -7,6 +7,9 @@ local dispatched = {}
 
 _G.__hyprscroll2d_focus_subscription = nil
 _G.hl = {
+    config = function(value)
+        _G.applied_config = value
+    end,
     layout = {
         register = function(name, provider)
             registered = { name = name, provider = provider }
@@ -30,6 +33,7 @@ _G.hl = {
 
 assert(loadfile(root .. "/layout/init.lua"))()
 assert(registered and registered.name == "hyprscroll2d", "layout did not register")
+assert(applied_config.input.follow_mouse == 1, "mouse focus config was not applied")
 
 local function target(id, active)
     return {

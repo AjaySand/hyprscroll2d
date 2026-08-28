@@ -2,7 +2,8 @@
 
 test:
 	lua tests/run.lua
-	lua tests/hyprland_adapter.lua
+	lua tests/config_loader.lua
+	config_home=$$(mktemp -d); XDG_CONFIG_HOME=$$config_home lua tests/hyprland_adapter.lua; status=$$?; rm -rf "$$config_home"; exit $$status
 	lua tests/omarchy_integration.lua
 	bash tests/installer.sh
 

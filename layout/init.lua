@@ -14,9 +14,16 @@ local function load_relative(filename)
     return chunk()
 end
 
-local config = load_relative("config.lua")
+local defaults = load_relative("config.lua")
+local config = load_relative("config_loader.lua").load(defaults)
 local core = load_relative("core.lua")
 local workspaces = {}
+
+hl.config({
+    input = {
+        follow_mouse = config.focus_follows_mouse and 1 or 0,
+    },
+})
 
 local function safe_field(value, field)
     if value == nil then return nil end

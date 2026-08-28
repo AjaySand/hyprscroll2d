@@ -127,14 +127,33 @@ using Hyprscroll2D.
 
 ## Customize the layout
 
-Edit [`layout/config.lua`](layout/config.lua) to change:
+Create `~/.config/hyprscroll2d/config.lua` to override only the settings you
+want to change. If `XDG_CONFIG_HOME` is set, the plugin uses
+`$XDG_CONFIG_HOME/hyprscroll2d/config.lua` instead.
+
+```lua
+return {
+    peek_x = 24,
+    peek_y = 24,
+    focus_follows_mouse = false,
+    width_steps = { 0.33, 0.50, 0.75, 0.85, 0.90, 1.00 },
+    default_width_step = 5,
+}
+```
+
+Available settings and their defaults are listed in
+[`layout/config.lua`](layout/config.lua):
 
 - `peek_x` and `peek_y`: visible pixels from neighboring columns and rows
 - `gap_x` and `gap_y`: spacing between cells
-- `width_steps` and `height_steps`: available size presets
+- `focus_follows_mouse`: focus a window when the pointer enters it; this
+  changes Hyprland's global input setting and affects every workspace
+- `width_steps` and `height_steps`: available size presets; each override
+  replaces the complete array
 - `default_width_step` and `default_height_step`: initial window dimensions
 
-Reload Hyprland after changing the values.
+Reload Hyprland after changing the values. Invalid or unknown settings are
+reported by `hyprctl configerrors` and prevent the layout from loading.
 
 ## Update a config installation
 
