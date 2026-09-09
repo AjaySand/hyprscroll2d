@@ -65,7 +65,7 @@ cp -p -- "$config_file" "$backup_file"
   printf '\n%s\n' "$start_marker"
   printf 'do\n'
   printf '  local hyprscroll2d = "%s"\n' "$escaped_repo"
-  printf '  dofile(hyprscroll2d .. "/layout/init.lua")\n'
+  printf '  dofile(hyprscroll2d .. "/layout/init.lua")({ peek_x = 48, peek_y = 48, gap_x = 12, gap_y = 12, focus_follows_mouse = true, width_steps = { 0.50, 0.67, 0.85, 1.00 }, height_steps = { 0.50, 0.67, 0.85, 1.00 }, default_width_step = 2, default_height_step = 3 })\n'
   printf '  dofile(hyprscroll2d .. "/integration/omarchy.lua")\n'
   printf '  hl.workspace_rule({ workspace = "%s", layout = "lua:hyprscroll2d" })\n' "$workspace"
   printf 'end\n'

@@ -47,7 +47,7 @@ omarchy plugin add https://github.com/kirollosatef/hyprscroll2d --enable
 ```
 
 The plugin loads Hyprscroll2D at runtime without editing your Hyprland config.
-It enables the layout only on workspace 9. Press `Super+9`, open a few windows,
+It enables the layout on workspace 9 by default. Press `Super+9`, open a few windows,
 and try the controls below.
 
 Update it later with:
@@ -94,7 +94,16 @@ For a manual installation, add the following near the end of
 
 ```lua
 local hyprscroll2d = os.getenv("HOME") .. "/.local/share/hyprscroll2d"
-dofile(hyprscroll2d .. "/layout/init.lua")
+dofile(hyprscroll2d .. "/layout/init.lua")({
+  peek_x = 48,
+  peek_y = 48,
+  gap_x = 12,
+  gap_y = 12,
+  width_steps = { 0.50, 0.67, 0.85, 1.00 },
+  height_steps = { 0.50, 0.67, 0.85, 1.00 },
+  default_width_step = 2,
+  default_height_step = 3,
+})
 dofile(hyprscroll2d .. "/integration/omarchy.lua")
 
 -- Start safely on one experimental workspace.
@@ -127,14 +136,33 @@ using Hyprscroll2D.
 
 ## Customize the layout
 
-Edit [`layout/config.lua`](layout/config.lua) to change:
+Add settings directly to the plugin entry in `~/.config/omarchy/shell.json`:
 
-- `peek_x` and `peek_y`: visible pixels from neighboring columns and rows
-- `gap_x` and `gap_y`: spacing between cells
-- `width_steps` and `height_steps`: available size presets
-- `default_width_step` and `default_height_step`: initial window dimensions
+```json
+{
+  "id": "io.github.kirollosatef.hyprscroll2d",
+  "workspace": 9,
+  "peekX": 48,
+  "peekY": 48,
+  "gapX": 12,
+  "gapY": 12,
+  "focusFollowsMouse": true,
+  "widthSteps": [0.50, 0.67, 0.85, 1.00],
+  "heightSteps": [0.50, 0.67, 0.85, 1.00],
+  "defaultWidthStep": 2,
+  "defaultHeightStep": 3
+}
+```
 
-Reload Hyprland after changing the values.
+- `workspace`: workspace that uses Hyprscroll2D
+- `peekX` and `peekY`: visible pixels from neighboring columns and rows
+- `gapX` and `gapY`: spacing between cells
+- `focusFollowsMouse`: whether moving the pointer focuses the window beneath it
+- `widthSteps` and `heightSteps`: available size presets from greater than zero through one
+- `defaultWidthStep` and `defaultHeightStep`: one-based initial size preset indexes
+
+Omitted or invalid fields use the defaults shown above. Layout settings apply
+automatically; changing `workspace` reloads Hyprland before applying the new rule.
 
 ## Update a config installation
 

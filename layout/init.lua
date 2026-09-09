@@ -1,5 +1,3 @@
-if rawget(_G, "__hyprscroll2d_layout_registered") then return true end
-
 local function current_dir()
     local source = debug and debug.getinfo(1, "S").source
     if type(source) ~= "string" or source:sub(1, 1) ~= "@" then
@@ -14,9 +12,26 @@ local function load_relative(filename)
     return chunk()
 end
 
-local config = load_relative("config.lua")
+return function(config)
+if type(config) ~= "table" then error("hyprscroll2d: configuration table required") end
+if rawget(_G, "__hyprscroll2d_set_config") then
+    _G.__hyprscroll2d_set_config(config)
+    return true
+end
+
+local active_config = config
 local core = load_relative("core.lua")
 local workspaces = {}
+
+local function apply_input_config(value)
+    hl.config({
+        input = {
+            follow_mouse = value.focus_follows_mouse and 1 or 0,
+        },
+    })
+end
+
+apply_input_config(active_config)
 
 local function safe_field(value, field)
     if value == nil then return nil end
@@ -77,7 +92,7 @@ local function context(ctx)
     for _, target in ipairs(ctx.targets or {}) do
         table.insert(ids, target_id(target, #ids + 1))
     end
-    core.sync(state, ids, active_id, config)
+    core.sync(state, ids, active_id, active_config)
 
     return state, descriptors
 end
@@ -89,7 +104,7 @@ end
 
 local function recalculate(ctx)
     local state, descriptors = context(ctx)
-    local placements = core.placements(state, ctx.area, config)
+    local placements = core.placements(state, ctx.area, active_config)
 
     for id, descriptor in pairs(descriptors) do
         local placement = placements[id]
@@ -114,12 +129,12 @@ local function layout_msg(ctx, message)
         if extra ~= "grow" and extra ~= "shrink" then
             return "hyprscroll2d: resize width expects grow or shrink"
         end
-        core.resize_width(state, config, extra == "grow" and 1 or -1)
+        core.resize_width(state, active_config, extra == "grow" and 1 or -1)
     elseif command == "resize" and argument == "height" then
         if extra ~= "grow" and extra ~= "shrink" then
             return "hyprscroll2d: resize height expects grow or shrink"
         end
-        core.resize_height(state, config, extra == "grow" and 1 or -1)
+        core.resize_height(state, active_config, extra == "grow" and 1 or -1)
     else
         return "hyprscroll2d: expected focus/move/pan <direction>, resize width/height grow/shrink, or center"
     end
@@ -148,5 +163,10 @@ hl.layout.register("hyprscroll2d", {
     layout_msg = layout_msg,
 })
 
+_G.__hyprscroll2d_set_config = function(next_config)
+    active_config = next_config
+    apply_input_config(active_config)
+end
 _G.__hyprscroll2d_layout_registered = true
 return true
+end
