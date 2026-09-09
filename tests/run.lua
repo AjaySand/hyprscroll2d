@@ -2,7 +2,17 @@ local source = debug.getinfo(1, "S").source:sub(2)
 local tests_dir = source:match("^(.*)/[^/]+$") or "tests"
 local root = tests_dir:match("^(.*)/tests$") or "."
 local core = assert(loadfile(root .. "/layout/core.lua"))()
-local config = assert(loadfile(root .. "/layout/config.lua"))()
+local config = {
+    peek_x = 48,
+    peek_y = 48,
+    gap_x = 12,
+    gap_y = 12,
+    focus_follows_mouse = true,
+    width_steps = { 0.50, 0.67, 0.85, 1.00 },
+    height_steps = { 0.50, 0.67, 0.85, 1.00 },
+    default_width_step = 2,
+    default_height_step = 3,
+}
 local passed = 0
 
 local function test(name, fn)
