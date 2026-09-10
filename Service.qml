@@ -44,6 +44,7 @@ Item {
         const widthSteps = positiveSteps(entry.widthSteps, [0.50, 0.67, 0.85, 1.00])
         const heightSteps = positiveSteps(entry.heightSteps, [0.50, 0.67, 0.85, 1.00])
         return {
+            overview_keybind: entry.overviewKeybind === undefined ? "SUPER + CTRL + SHIFT + O" : String(entry.overviewKeybind),
             workspace: Math.round(finiteNumber(entry.workspace, 9, 1, 99)),
             peek_x: finiteNumber(entry.peekX, 48, 0, 10000),
             peek_y: finiteNumber(entry.peekY, 48, 0, 10000),
@@ -71,6 +72,7 @@ Item {
 
     function luaSettings(value) {
         return "{workspace=" + value.workspace
+            + ",overview_keybind=" + root.luaQuote(value.overview_keybind)
             + ",peek_x=" + value.peek_x
             + ",peek_y=" + value.peek_y
             + ",gap_x=" + value.gap_x
@@ -94,6 +96,13 @@ Item {
     }
 
     Component.onCompleted: loadTimer.start()
+
+    readonly property var backgroundService: root.shell ? root.shell.serviceFor("omarchy.background") : null
+
+    OverviewController {
+        workspace: root.settings.workspace
+        wallpaperSource: root.backgroundService ? root.backgroundService.imageUrl(root.backgroundService.currentBackground) : ""
+    }
     onSettingsChanged: {
         if (root.appliedWorkspace !== -1 && root.appliedWorkspace !== root.settings.workspace) {
             reloader.running = true
@@ -118,6 +127,14 @@ Item {
 
     Process {
         id: loader
+
+        stdout: StdioCollector {
+            waitForEnd: true
+            onStreamFinished: {
+                const message = text.trim()
+                if (message && message !== "ok") console.warn("Hyprscroll2D:", message)
+            }
+        }
 
         onRunningChanged: {
             if (!running && root.loadPending) {

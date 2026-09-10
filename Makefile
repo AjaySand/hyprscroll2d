@@ -2,6 +2,8 @@
 
 test:
 	lua tests/run.lua
+	lua tests/overview.lua
+	lua tests/overview_binding.lua
 	lua tests/hyprland_adapter.lua
 	lua tests/omarchy_integration.lua
 	bash tests/installer.sh

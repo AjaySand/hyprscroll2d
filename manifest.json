@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.kirollosatef.hyprscroll2d",
   "name": "Hyprscroll2D",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Kirollos Atef",
   "license": "MIT",
   "description": "An infinite two-dimensional scrolling workspace layout for Hyprland.",

@@ -144,20 +144,20 @@ local function metrics_less(a, b)
     return tostring(a.id) < tostring(b.id)
 end
 
-function M.focus(state, direction)
-    if not DIRECTIONS[direction] or not state.focused_id then
+function M.neighbor(state, id, direction)
+    if not DIRECTIONS[direction] or not id then
         return nil
     end
 
-    local origin = state.positions[state.focused_id]
+    local origin = state.positions[id]
     if not origin then return nil end
 
     local candidates = {}
-    for id, position in pairs(state.positions) do
-        if id ~= state.focused_id then
+    for candidate_id, position in pairs(state.positions) do
+        if candidate_id ~= id then
             local metrics = directional_metrics(origin, position, direction)
             if metrics then
-                metrics.id = id
+                metrics.id = candidate_id
                 table.insert(candidates, metrics)
             end
         end
@@ -165,11 +165,15 @@ function M.focus(state, direction)
 
     table.sort(candidates, metrics_less)
     local target = candidates[1]
-    if not target then return nil end
+    return target and target.id
+end
 
-    state.focused_id = target.id
+function M.focus(state, direction)
+    local id = M.neighbor(state, state.focused_id, direction)
+    if not id then return nil end
+    state.focused_id = id
     M.follow(state)
-    return target.id
+    return id
 end
 
 function M.move(state, direction)
@@ -247,8 +251,10 @@ function M.placements(state, area, config)
     for id, position in pairs(state.positions) do
         local width_step = clamp(state.width_step_by_id[id] or config.default_width_step, 1, #config.width_steps)
         local height_step = clamp(state.height_step_by_id[id] or config.default_height_step, 1, #config.height_steps)
-        local width = maximum_width * config.width_steps[width_step]
-        local height = maximum_height * config.height_steps[height_step]
+        -- Integer boxes keep fractional size presets from changing client size
+        -- by one pixel when a window is translated for overview capture.
+        local width = math.max(1, math.floor(maximum_width * config.width_steps[width_step]))
+        local height = math.max(1, math.floor(maximum_height * config.height_steps[height_step]))
 
         dimensions[id] = { w = width, h = height }
         column_widths[position.col] = math.max(column_widths[position.col] or 0, width)
@@ -259,8 +265,8 @@ function M.placements(state, area, config)
         max_row = math.max(max_row, position.row)
     end
 
-    local default_width = maximum_width * config.width_steps[config.default_width_step]
-    local default_height = maximum_height * config.height_steps[config.default_height_step]
+    local default_width = math.max(1, math.floor(maximum_width * config.width_steps[config.default_width_step]))
+    local default_height = math.max(1, math.floor(maximum_height * config.height_steps[config.default_height_step]))
     for col = min_col, max_col do
         column_widths[col] = column_widths[col] or default_width
     end
@@ -292,8 +298,8 @@ function M.placements(state, area, config)
         local size = dimensions[id]
 
         placements[id] = {
-            x = column_centers[position.col] - (size.w / 2),
-            y = row_centers[position.row] - (size.h / 2),
+            x = math.floor(column_centers[position.col] - (size.w / 2)),
+            y = math.floor(row_centers[position.row] - (size.h / 2)),
             w = size.w,
             h = size.h,
         }
