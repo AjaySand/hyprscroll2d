@@ -130,9 +130,46 @@ If `hyprctl configerrors` prints nothing, the manual setup is ready.
 | Shrink window width | `Super+=` |
 | Grow window height | `Super+Shift+=` |
 | Shrink window height | `Super+Shift+-` |
+| Open overview, with the Omarchy shell plugin | `Super+Ctrl+Shift+O` |
 
 These keys retain Omarchy's normal behavior whenever the active window is not
 using Hyprscroll2D.
+
+## Find a window in overview
+
+![Full-screen canvas overview with nine test windows](docs/overview.png)
+
+On the configured canvas workspace, press `Super+Ctrl+Shift+O` to zoom out.
+Overview fills the current monitor and shows roughly three rows and three columns
+in their existing positions. Empty cells stay empty. Arrow keys or `H/J/K/L`
+select a window and pan the overview when the selection reaches its edge.
+
+- Press Enter or click a preview to focus that window at normal zoom.
+- Press Escape to restore the original window and camera, including a manually panned view.
+- Application keystrokes and clicks are captured while overview is open. Desktop
+  shortcuts marked `locked`, such as volume controls, remain compositor shortcuts.
+
+Previews are still captures, refreshed when a preview enters the view. This keeps
+the window finder from continuously streaming nine applications. Overview requires
+the Omarchy shell installation and Quickshell's `ScreencopyView` support. The
+standalone Lua installation does not provide the overlay.
+
+Hyprland 0.56 cannot capture a window that is completely outside its monitor.
+While overview is covered by an opaque layer, the layout temporarily centers
+windows behind it without resizing them. Their saved grid positions stay intact.
+Placements are restored before the overlay disappears. A three-second watchdog
+also restores the canvas if the shell stops responding.
+
+If the selected window closes during confirmation, overview cancels the selection.
+If the original window closes, Escape restores the original camera and a surviving
+window. Closing every window dismisses overview.
+
+After upgrading from an earlier plugin version, run `hyprctl reload` once to load
+the new Lua interface. To open overview through IPC:
+
+```bash
+omarchy-shell io.github.kirollosatef.hyprscroll2d open
+```
 
 ## Customize the layout
 
@@ -142,6 +179,7 @@ Add settings directly to the plugin entry in `~/.config/omarchy/shell.json`:
 {
   "id": "io.github.kirollosatef.hyprscroll2d",
   "workspace": 9,
+  "overviewKeybind": "SUPER + CTRL + SHIFT + O",
   "peekX": 48,
   "peekY": 48,
   "gapX": 12,
@@ -155,13 +193,15 @@ Add settings directly to the plugin entry in `~/.config/omarchy/shell.json`:
 ```
 
 - `workspace`: workspace that uses Hyprscroll2D
+- `overviewKeybind`: overview activation shortcut in Hyprland Lua key syntax; choose an unused shortcut
 - `peekX` and `peekY`: visible pixels from neighboring columns and rows
 - `gapX` and `gapY`: spacing between cells
 - `focusFollowsMouse`: whether moving the pointer focuses the window beneath it
 - `widthSteps` and `heightSteps`: available size presets from greater than zero through one
 - `defaultWidthStep` and `defaultHeightStep`: one-based initial size preset indexes
 
-Omitted or invalid fields use the defaults shown above. Layout settings apply
+Omitted fields use the defaults shown above. Supply a valid, unused key combination
+for `overviewKeybind`. Layout settings apply
 automatically; changing `workspace` reloads Hyprland before applying the new rule.
 
 ## Update a config installation

@@ -11,6 +11,7 @@ return function(config)
     if type(config) ~= "table" then error("hyprscroll2d: configuration table required") end
 
     dofile(root_dir .. "/layout/init.lua")(config)
+    dofile(root_dir .. "/integration/overview.lua")(config.overview_keybind)
     if not rawget(_G, "__hyprscroll2d_omarchy_integrated") then
         dofile(root_dir .. "/integration/omarchy.lua")
     end
