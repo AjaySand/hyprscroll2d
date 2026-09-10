@@ -18,6 +18,12 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
+    Image {
+        anchors.fill: parent
+        source: root.controller.wallpaperSource
+        fillMode: Image.PreserveAspectCrop
+    }
+
     Item {
         id: keys
         anchors.fill: parent

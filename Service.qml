@@ -97,7 +97,12 @@ Item {
 
     Component.onCompleted: loadTimer.start()
 
-    OverviewController { workspace: root.settings.workspace }
+    readonly property var backgroundService: root.shell ? root.shell.serviceFor("omarchy.background") : null
+
+    OverviewController {
+        workspace: root.settings.workspace
+        wallpaperSource: root.backgroundService ? root.backgroundService.imageUrl(root.backgroundService.currentBackground) : ""
+    }
     onSettingsChanged: {
         if (root.appliedWorkspace !== -1 && root.appliedWorkspace !== root.settings.workspace) {
             reloader.running = true

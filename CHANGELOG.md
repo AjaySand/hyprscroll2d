@@ -3,6 +3,7 @@
 ## v0.4.0 - 2026-09-10
 
 - Add a full-screen 3×3 canvas overview with still window previews and a zoom transition.
+- Use the current Omarchy desktop wallpaper as the overview background.
 - Navigate with arrow keys or H/J/K/L, then select with Enter or a click.
 - Restore the original focus and camera with Escape.
 - Capture application input while overview is open, and restore placements if the shell stops responding.

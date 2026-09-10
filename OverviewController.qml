@@ -7,6 +7,7 @@ Scope {
     id: root
 
     required property int workspace
+    property url wallpaperSource
     property bool opened: false
     property string phase: "idle"
     property var display: null

@@ -141,7 +141,8 @@ using Hyprscroll2D.
 
 On the configured canvas workspace, press `Super+Ctrl+Shift+O` to zoom out.
 Overview fills the current monitor and shows roughly three rows and three columns
-in their existing positions. Empty cells stay empty. Arrow keys or `H/J/K/L`
+in their existing positions over the current desktop wallpaper. Wallpaper changes
+follow the Omarchy background service automatically. Empty cells stay empty. Arrow keys or `H/J/K/L`
 select a window and pan the overview when the selection reaches its edge.
 
 - Press Enter or click a preview to focus that window at normal zoom.
